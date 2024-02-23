@@ -1,15 +1,79 @@
-import React from "react";
-import { SearchIcon } from "@heroicons/react/solid";
-const SearchBar = () => {
+"use client";
+import React, { useState } from "react";
+import { SearchIcon, UsersIcon } from "@heroicons/react/solid";
+import { DateRangePicker, RangeKeyDict } from "react-date-range";
+import "react-date-range/dist/styles.css"; // main style file
+import "react-date-range/dist/theme/default.css"; // theme css file
+import Link from "next/link";
+const SearchBar = ({ placeholder }: { placeholder?: string }) => {
+  const [input, setInput] = useState<string>("");
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [numOfGuests, setNumOfGuests] = useState<number>(1);
+  const selectionRanges = {
+    startDate,
+    endDate,
+    key: "selection",
+  };
+  const handleSelection = (ranges: RangeKeyDict) => {
+    setStartDate(ranges.selection.startDate as Date);
+    setEndDate(ranges.selection.endDate as Date);
+  };
   return (
-    <div className="flex items-center md:border-2 rounded-full py-2 md:shadow-sm px-2">
-      <input
-        type="text"
-        placeholder="Start your search"
-        className="text-sm text-gray-600 placeholder-gray-400 flex-grow pl-5 bg-transparent outline-none caret-red-400"
-      />
-      <SearchIcon className="hidden md:inline-flex h-8 bg-red-400 text-white rounded-full p-2 cursor-pointer" />
-    </div>
+    <>
+      <div className="flex items-center md:border-2 rounded-full py-2 md:shadow-sm">
+        <input
+          type="text"
+          placeholder={placeholder || "Start your search"}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="text-sm text-gray-600 placeholder-gray-400 flex-grow pl-5 bg-transparent outline-none"
+        />
+        <SearchIcon className="hidden md:inline-flex h-8 bg-red-400 text-white rounded-full p-2 cursor-pointer md:mx-2" />
+      </div>
+      {input && (
+        <div className=" absolute  top-[100%] left-[50%] flex flex-col col-span-3 mx-auto translate-x-[-50%] ">
+          <DateRangePicker
+            ranges={[selectionRanges]}
+            onChange={handleSelection}
+            rangeColors={["#FD5B61"]}
+            minDate={new Date()}
+          />
+          <div className="flex items-center border-b bg-white p-4">
+            <h2 className="text-2xl flex-grow font-semibold">
+              Number of Guests
+            </h2>
+            <UsersIcon className="h-5" />
+            <input
+              type="number"
+              className="w-12 pl-2 text-lg outline-none text-red-400"
+              value={numOfGuests}
+              min={1}
+              onChange={(e) => setNumOfGuests(Number(e.target.value))}
+            />
+          </div>
+          <div className="flex items-center bg-white p-5">
+            <button
+              type="button"
+              className="flex-grow text-gray-500 text-center"
+              onClick={() => setInput("")}
+            >
+              Cancel
+            </button>
+            <Link
+              href={{
+                pathname: "/search",
+                search: `?location=${input}&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}&numOfGuests=${numOfGuests}`,
+              }}
+              onClick={() => setInput("")}
+              className="flex-grow text-red-400 text-center"
+            >
+              Search
+            </Link>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

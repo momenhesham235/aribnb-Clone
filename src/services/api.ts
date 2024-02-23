@@ -1,8 +1,8 @@
-export const getExport = async (param: string) => {
+export const getData = async (param: string) => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${param}`);
-    const exploreData = await res.json();
-    return exploreData;
+    const DataReturn = await res.json();
+    return DataReturn;
   } catch (error) {
     console.log(error);
   }

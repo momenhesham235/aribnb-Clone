@@ -5,10 +5,10 @@ import React from "react";
 import SearchBar from "@/components/Header/SearchBar";
 import { Navbar } from "@/components/Header/Navbar";
 
-const Header = () => {
+const Header = ({ placeholder }: { placeholder?: string }) => {
   return (
     <header className="sticky w-full bg-white z-50 shadow-md top-0 right-0 backdrop-blur-md">
-      <div className="container grid grid-cols-2 lg:grid-cols-3 items-center">
+      <div className="container grid grid-cols-2 lg:grid-cols-3 items-center relative">
         <Link href="/">
           <Image
             src={logo}
@@ -18,7 +18,7 @@ const Header = () => {
             className="object-cover cursor-pointer"
           />
         </Link>
-        <SearchBar />
+        <SearchBar placeholder={placeholder} />
         <Navbar />
       </div>
     </header>
@@ -26,3 +26,7 @@ const Header = () => {
 };
 
 export default Header;
+
+/**
+ * fill => image position absolute and width and height full of parent
+ */
